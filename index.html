@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ek Khas Sawal Tumhare Liye... ❤️</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@300;400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 CSS & Icons CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Canvas Confetti Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --primary-pink: #ff3366;
+      --deep-rose: #e6005c;
+      --soft-blush: #fff0f5;
+      --gradient-bg: linear-gradient(135deg, #1a0826 0%, #3a0025 50%, #1a0826 100%);
+      --glass-bg: rgba(255, 255, 255, 0.88);
+      --glass-border: rgba(255, 255, 255, 0.6);
+      --glass-shadow: 0 20px 50px rgba(230, 0, 92, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--gradient-bg);
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+      position: relative;
+      padding: 25px 12px;
+    }
+
+    /* Ambient Canvas Particle Background */
+    #bg-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Ambient Glowing Orbs */
+    .glow-orb {
+      position: fixed;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      filter: blur(120px);
+      z-index: 1;
+      opacity: 0.55;
+      animation: pulseGlow 7s infinite alternate ease-in-out;
+      pointer-events: none;
+    }
+
+    .glow-1 { top: -80px; left: -80px; background: #ff1493; }
+    .glow-2 { bottom: -80px; right: -80px; background: #9400d3; }
+
+    @keyframes pulseGlow {
+      0% { transform: scale(1); opacity: 0.4; }
+      100% { transform: scale(1.35); opacity: 0.75; }
+    }
+
+    /* Outer Wrapper */
+    .app-wrapper {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* Glassmorphism Card Style */
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 32px;
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
+      padding: 2.2rem 1.8rem;
+      text-align: center;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Music Control Bar */
+    .music-pill {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      padding: 8px 16px;
+      border-radius: 50px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      transition: all 0.3s ease;
+    }
+
+    .music-pill:hover {
+      background: rgba(255, 255, 255, 0.35);
+      transform: scale(1.05);
+    }
+
+    /* Custom Fonts */
+    .font-script {
+      font-family: 'Great Vibes', cursive;
+      color: var(--deep-rose);
+    }
+
+    .main-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2.6rem;
+      font-weight: 700;
+      background: linear-gradient(45deg, #ff0055, #ff4500);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.4rem;
+    }
+
+    /* Avatar Container */
+    .avatar-wrapper {
+      position: relative;
+      width: 130px;
+      height: 130px;
+      margin: 0 auto 1.2rem auto;
+    }
+
+    .avatar-ring {
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #ff1493, #ff758c, #ff4b2b);
+      animation: rotateRing 4s linear infinite;
+    }
+
+    @keyframes rotateRing {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .avatar-circle {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: #ffe6f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.8rem;
+      box-shadow: inset 0 4px 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+      border: 4px solid #fff;
+    }
+
+    /* Love Meter Widget */
+    .love-meter-box {
+      background: rgba(255, 255, 255, 0.65);
+      border-radius: 20px;
+      padding: 14px 18px;
+      margin: 18px 0;
+      border: 1px solid rgba(255,255,255,0.9);
+    }
+
+    .form-range::-webkit-slider-thumb {
+      background: var(--primary-pink);
+    }
+
+    /* Interactive Buttons Area */
+    .buttons-area {
+      position: relative;
+      min-height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .btn-yes {
+      background: linear-gradient(135deg, #ff0055 0%, #ff4b2b 100%);
+      color: #fff;
+      font-weight: 700;
+      padding: 14px 38px;
+      border-radius: 50px;
+      border: none;
+      box-shadow: 0 10px 25px rgba(255, 0, 85, 0.4);
+      transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.25s ease;
+      font-size: 1.1rem;
+      z-index: 10;
+    }
+
+    .btn-yes:hover {
+      transform: scale(1.08);
+      box-shadow: 0 15px 30px rgba(255, 0, 85, 0.6);
+      color: #fff;
+    }
+
+    .btn-no {
+      background: #f0f0f5;
+      color: #555;
+      font-weight: 600;
+      padding: 12px 28px;
+      border-radius: 50px;
+      border: 1px solid #ddd;
+      transition: all 0.2s ease;
+      font-size: 0.95rem;
+      position: absolute;
+      white-space: nowrap;
+      cursor: pointer;
+      z-index: 9;
+    }
+
+    /* Secret Card Box */
+    .secret-box {
+      background: #fff;
+      border-radius: 16px;
+      padding: 12px 16px;
+      margin: 14px 0;
+      cursor: pointer;
+      border: 2px dashed #ff80ab;
+      transition: all 0.3s ease;
+    }
+
+    .secret-box:hover {
+      background: #fff0f5;
+      transform: translateY(-2px);
+    }
+
+    /* Timeline Styles for Card 2 */
+    .timeline {
+      position: relative;
+      padding-left: 20px;
+      text-align: left;
+      margin: 15px 0;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 5px;
+      bottom: 5px;
+      width: 2px;
+      background: #ffb3c6;
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 12px;
+      font-size: 0.85rem;
+    }
+    .timeline-item::before {
+      content: '❤️';
+      position: absolute;
+      left: -20px;
+      font-size: 10px;
+      top: 2px;
+    }
+
+    /* Coupon Cards */
+    .coupon-card {
+      background: #fff;
+      border-left: 5px solid var(--primary-pink);
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-bottom: 10px;
+      text-align: left;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .coupon-card:hover {
+      transform: scale(1.02);
+    }
+
+    /* Utility Classes */
+    .d-none-custom {
+      display: none !important;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .promises-list {
+      text-align: left;
+      background: rgba(255, 255, 255, 0.75);
+      border-radius: 20px;
+      padding: 16px;
+      margin: 16px 0;
+      font-size: 0.9rem;
+    }
+
+    .promises-list li {
+      margin-bottom: 8px;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Floating Hearts */
+    .floating-heart {
+      position: absolute;
+      pointer-events: none;
+      animation: floatUp 4s linear forwards;
+      z-index: 100;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(0.8) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-100vh) scale(1.4) rotate(360deg); opacity: 0; }
+    }
+
+    @media (max-width: 480px) {
+      .glass-card { padding: 1.8rem 1.2rem; border-radius: 28px; }
+      .main-title { font-size: 2.2rem; }
+      .avatar-wrapper { width: 110px; height: 110px; }
+      .avatar-circle { font-size: 3.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Particle Canvas -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- Ambient Glow Orbs -->
+  <div class="glow-orb glow-1"></div>
+  <div class="glow-orb glow-2"></div>
+
+  <!-- Music Pill Control -->
+  <div class="music-pill" id="musicToggle" onclick="toggleAudio()">
+    <i class="bi bi-disc-fill text-danger fs-5" id="musicIcon"></i>
+    <span id="musicText">Romantic Tune: Off</span>
+  </div>
+
+  <!-- Audio Element -->
+  <audio id="bgAudio" loop preload="auto">
+    <source src="https://assets.mixkit.co/music/preview/mixkit-loving-you-117.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="app-wrapper">
+
+    <!-- ================= CARD 1: THE PROPOSAL ================= -->
+    <div class="glass-card" id="card1">
+      
+      <!-- Avatar Ring -->
+      <div class="avatar-wrapper">
+        <div class="avatar-ring"></div>
+        <div class="avatar-circle" id="avatarEmoji">💖</div>
+      </div>
+
+      <h1 class="main-title">Hey Cutie! <i class="bi bi-heart-fill text-danger"></i></h1>
+      <p class="text-muted small fw-medium">Mujhe tumse dil ki baat kehni hai...</p>
+
+      <!-- Interactive Love Test Meter -->
+      <div class="love-meter-box text-start">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <label class="form-label mb-0 small fw-semibold text-secondary">Tum mujhse kitna pyar karti ho?</label>
+          <span class="badge bg-danger rounded-pill" id="meterVal">1000%</span>
+        </div>
+        <input type="range" class="form-range" min="100" max="10000" step="100" value="1000" id="loveRange" oninput="updateMeter(this.value)">
+      </div>
+
+      <!-- Proposal Question -->
+      <h4 class="fw-bold my-3 text-dark lh-base" style="font-size: 1.25rem;">
+        Kya tum meri poori life ke liye<br><span class="text-danger">meri wali</span> banogi? 🌹
+      </h4>
+
+      <!-- Secret Note Trigger -->
+      <div class="secret-box" onclick="revealSecret()">
+        <p class="mb-0 small text-danger fw-semibold" id="secretText">
+          <i class="bi bi-envelope-heart me-1"></i> Tap to read a secret note...
+        </p>
+      </div>
+
+      <!-- Interactive Evasive Buttons -->
+      <div class="buttons-area" id="btnContainer">
+        <button class="btn btn-yes" id="yesBtn" onclick="goToTimeline()">
+          Haan! <i class="bi bi-emoji-heart-eyes-fill ms-1"></i>
+        </button>
+        <button class="btn btn-no" id="noBtn" onmouseover="moveNo()" onclick="moveNo()" ontouchstart="moveNo()">
+          Nahi 😜
+        </button>
+      </div>
+
+      <p class="text-muted mt-3 mb-0" style="font-size: 0.75rem;">
+        <i class="bi bi-info-circle me-1"></i> Hint: 'Nahi' wala button thoda sharmila hai 😏
+      </p>
+
+    </div>
+
+    <!-- ================= CARD 2: TIMELINE & "I LOVE YOU MY HEART" ================= -->
+    <div class="glass-card d-none-custom" id="card2">
+      <h1 class="font-script fs-1 text-danger mb-1">I Love You My Heart ❤️</h1>
+      <p class="text-muted small fw-medium mb-3">Hamari pyaari si journey ki kuch khaas yaadein...</p>
+
+      <!-- Love Timeline -->
+      <div class="timeline">
+        <div class="timeline-item">
+          <strong>Phli Nazar:</strong> Jab tumse pehli baar nazar mili thi, dil wahin haar gaye the! ✨
+        </div>
+        <div class="timeline-item">
+          <strong>Phli Baat:</strong> Wo pehli chat aur ghanto till baatein karna aaj bhi yaad hai. 💬
+        </div>
+        <div class="timeline-item">
+          <strong>Special Bond:</strong> Ab tum meri aadat hi nahi, meri poori duniya ban chuki ho. 🌍
+        </div>
+      </div>
+
+      <button class="btn btn-yes w-100 py-2 mt-3" onclick="yesClicked()">
+        Aage Badhein? 🥰 <i class="bi bi-arrow-right"></i>
+      </button>
+
+      <!-- Back to Start Button Added -->
+      <button class="btn btn-outline-secondary btn-sm w-100 py-2 mt-2 rounded-pill fw-semibold" onclick="goToHome()">
+        <i class="bi bi-house-heart-fill me-1"></i> Start Se Dekhein? 🏠
+      </button>
+    </div>
+
+    <!-- ================= CARD 3: CELEBRATION & SUCCESS ================= -->
+    <div class="glass-card d-none-custom" id="card3">
+
+      <span class="badge bg-danger-subtle text-danger rounded-pill px-3 py-2 fw-semibold mb-2">
+        <i class="bi bi-stars me-1"></i> Proposal Accepted Forever!
+      </span>
+
+      <h1 class="main-title mb-1">Yayyy! 🎉</h1>
+      <h3 class="font-script fs-1 text-danger mb-2">I Love You So Much! ❤️</h3>
+
+      <div class="avatar-wrapper my-2" style="width: 100px; height: 100px;">
+        <div class="avatar-ring"></div>
+        <div class="avatar-circle">👩‍❤️‍👨</div>
+      </div>
+
+      <!-- Dynamic Typewriter Animation Text -->
+      <p class="text-dark fw-medium my-2 small" id="typewriterText" style="min-height: 40px;"></p>
+
+      <!-- Promises Accordion/List -->
+      <div class="promises-list shadow-sm">
+        <h6 class="fw-bold text-danger mb-2"><i class="bi bi-shield-lock-fill me-1"></i> Meri Promises:</h6>
+        <ul class="p-0 m-0">
+          <li><i class="bi bi-check-circle-fill text-danger"></i> Tumhe hamesha khush rakhunga! 😊</li>
+          <li><i class="bi bi-check-circle-fill text-danger"></i> Har mood-swing mein chocolates launga! 🍫</li>
+          <li><i class="bi bi-check-circle-fill text-danger"></i> Tumhari har baat bina bored hue sununga! 🎧</li>
+        </ul>
+      </div>
+
+      <!-- Love Coupons Section -->
+      <div class="my-3 text-start">
+        <h6 class="fw-bold text-dark small mb-2"><i class="bi bi-ticket-perforated-fill text-danger me-1"></i> Claim Your Love Coupons:</h6>
+        <div class="coupon-card" onclick="claimCoupon('Unlimited Hugs Pass 💖')">
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="fw-semibold small">1. Unlimited Hugs Pass</span>
+            <span class="badge bg-danger rounded-pill">Redeem</span>
+          </div>
+        </div>
+        <div class="coupon-card" onclick="claimCoupon('Late Night Gossips Pass 📞')">
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="fw-semibold small">2. Late Night Gossips Pass</span>
+            <span class="badge bg-danger rounded-pill">Redeem</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Love Certificate Modal Trigger -->
+      <button class="btn btn-outline-danger btn-sm rounded-pill mb-2 w-100 fw-semibold" onclick="generateAndShowCertificate()">
+        <i class="bi bi-award-fill me-1"></i> Download Our Love Certificate
+      </button>
+
+      <!-- WhatsApp Share Button -->
+      <button class="btn btn-yes w-100 py-2 mb-2" onclick="whatsappShare()">
+        <i class="bi bi-whatsapp fs-5 align-middle me-2"></i> WhatsApp par batao 💌
+      </button>
+
+      <!-- Back to Start Button Added -->
+      <button class="btn btn-outline-secondary btn-sm w-100 py-2 rounded-pill fw-semibold" onclick="goToHome()">
+        <i class="bi bi-house-heart-fill me-1"></i> Phir Se Start Karein? 🏠
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- LOVE CERTIFICATE MODAL -->
+  <div class="modal fade" id="certificateModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 rounded-4" style="background: rgba(255,255,255,0.95); backdrop-filter: blur(15px);">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title font-script fs-2 text-danger">Official Certificate of Love</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center p-3">
+          <!-- Canvas for Certificate Rendering -->
+          <canvas id="certificateCanvas" width="500" height="350" style="max-width: 100%; height: auto;"></canvas>
+          <div class="mt-3">
+            <a id="downloadCertBtn" class="btn btn-danger btn-sm rounded-pill px-4 fw-semibold" download="Love_Certificate.png">
+              <i class="bi bi-download me-1"></i> Save Certificate Image 📥
+            </a>
+          </div>
+          <p class="text-muted small mt-2">Aap yahan se download ya screenshot le sakti hain! 💕</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    /* ================= 1. WEB AUDIO SYNTHESIZER (SOUND EFFECTS) ================= */
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playSound(type) {
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      if (type === 'pop') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.1);
+      } else if (type === 'cheer') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(261.63, audioCtx.currentTime); // C4
+        osc.frequency.setValueAtTime(329.63, audioCtx.currentTime + 0.1); // E4
+        osc.frequency.setValueAtTime(392.00, audioCtx.currentTime + 0.2); // G4
+        osc.frequency.setValueAtTime(523.25, audioCtx.currentTime + 0.3); // C5
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.6);
+      }
+    }
+
+    /* ================= 2. CANVAS HEART PARTICLES BACKGROUND ================= */
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = canvas.height + Math.random() * 100;
+        this.size = Math.random() * 14 + 8;
+        this.speedY = Math.random() * 1.5 + 0.6;
+        this.speedX = Math.sin(Math.random() * Math.PI) * 0.6;
+        this.opacity = Math.random() * 0.5 + 0.2;
+        this.color = `hsl(${Math.random() * 20 + 340}, 100%, 70%)`;
+      }
+      update() {
+        this.y -= this.speedY;
+        this.x += this.speedX;
+        if (this.y < -20) this.reset();
+      }
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.opacity;
+        ctx.fillStyle = this.color;
+        ctx.font = `${this.size}px Arial`;
+        ctx.fillText('❤️', this.x, this.y);
+        ctx.restore();
+      }
+    }
+
+    function initCanvas() {
+      particles = [];
+      const count = Math.min(Math.floor(window.innerWidth / 15), 40);
+      for (let i = 0; i < count; i++) particles.push(new Particle());
+    }
+    initCanvas();
+
+    function animateCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(animateCanvas);
+    }
+    animateCanvas();
+
+    /* ================= 3. AUDIO PLAYER LOGIC ================= */
+    let isPlaying = false;
+    const bgAudio = document.getElementById('bgAudio');
+    const musicIcon = document.getElementById('musicIcon');
+    const musicText = document.getElementById('musicText');
+
+    function toggleAudio() {
+      if (isPlaying) {
+        bgAudio.pause();
+        musicIcon.className = "bi bi-disc-fill text-danger fs-5";
+        musicText.innerText = "Romantic Tune: Off";
+        isPlaying = false;
+      } else {
+        bgAudio.play().then(() => {
+          musicIcon.className = "bi bi-disc text-success fs-5 bi-spin";
+          musicText.innerText = "Romantic Tune: On 🎶";
+          isPlaying = true;
+        }).catch(() => {
+          musicText.innerText = "Click to play";
+        });
+      }
+    }
+
+    /* ================= 4. EVASIVE 'NO' BUTTON & SCALE SHIFT ================= */
+    let noCount = 0;
+    const noTexts = [
+      "Pakka Nahi? 🥺",
+      "Soch Lo Fir Se! 😭",
+      "Galti Se Bhi Nahi? 💔",
+      "Maan Jao Na Please! 🌸",
+      "Aise Mat Karo! 🧸",
+      "Dil Todogi Kya? 💔",
+      "Bas Haan Bol Do! ✨"
+    ];
+    const emojis = ["🥺", "😭", "💔", "🧸", "💌", "💖"];
+
+    function moveNo() {
+      playSound('pop');
+      const btn = document.getElementById('noBtn');
+      const card = document.getElementById('card1');
+      const yesBtn = document.getElementById('yesBtn');
+
+      const cardRect = card.getBoundingClientRect();
+      const btnRect = btn.getBoundingClientRect();
+
+      const maxX = cardRect.width - btnRect.width - 40;
+      const maxY = cardRect.height - btnRect.height - 40;
+
+      const randomX = Math.floor(Math.random() * maxX) - (maxX / 2);
+      const randomY = Math.floor(Math.random() * maxY) - (maxY / 2);
+
+      btn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+
+      if (noCount < noTexts.length) {
+        btn.innerText = noTexts[noCount];
+      }
+      noCount++;
+
+      // Scale up YES button & shrink NO button
+      const yesScale = 1 + (noCount * 0.08);
+      yesBtn.style.transform = `scale(${Math.min(yesScale, 1.4)})`;
+
+      const noScale = Math.max(1 - (noCount * 0.06), 0.65);
+      btn.style.fontSize = `${noScale}rem`;
+
+      document.getElementById('avatarEmoji').innerText = emojis[noCount % emojis.length];
+
+      if (!isPlaying) toggleAudio();
+    }
+
+    /* ================= 5. LOVE METER & SECRET REVEAL ================= */
+    function updateMeter(val) {
+      document.getElementById('meterVal').innerText = val + "%";
+    }
+
+    function revealSecret() {
+      playSound('pop');
+      const secrets = [
+        "✨ Fun Fact: Tumhari smile mera din bana deti hai!",
+        "🌸 Tum duniya ki sabse pyari ladki ho!",
+        "💖 Sach bataun? Tumhare bina sab boring lagta hai!",
+        "🎀 Tum mere liye bilkul perfect ho!"
+      ];
+      const randomSecret = secrets[Math.floor(Math.random() * secrets.length)];
+      document.getElementById('secretText').innerHTML = randomSecret;
+    }
+
+    function claimCoupon(title) {
+      playSound('pop');
+      alert("🎉 Coupon Claimed: " + title + "\nIsko kabhi bhi redeem kar sakti ho! ❤️");
+    }
+
+    /* ================= 6. NAVIGATION & SUCCESS SCREEN ================= */
+    function goToTimeline() {
+      playSound('pop');
+      const card1 = document.getElementById('card1');
+      const card2 = document.getElementById('card2');
+
+      card1.style.opacity = '0';
+      card1.style.transform = 'scale(0.9)';
+
+      setTimeout(() => {
+        card1.classList.add('d-none-custom');
+        card2.classList.remove('d-none-custom');
+        card2.style.opacity = '0';
+        card2.style.transform = 'scale(0.9)';
+        
+        setTimeout(() => {
+          card2.style.opacity = '1';
+          card2.style.transform = 'scale(1)';
+        }, 50);
+      }, 300);
+
+      if (!isPlaying) toggleAudio();
+    }
+
+    function yesClicked() {
+      playSound('cheer');
+
+      const card2 = document.getElementById('card2');
+      const card3 = document.getElementById('card3');
+
+      card2.style.opacity = '0';
+      card2.style.transform = 'scale(0.9)';
+
+      setTimeout(() => {
+        card2.classList.add('d-none-custom');
+        card3.classList.remove('d-none-custom');
+        card3.style.opacity = '0';
+        card3.style.transform = 'scale(0.9)';
+        
+        setTimeout(() => {
+          card3.style.opacity = '1';
+          card3.style.transform = 'scale(1)';
+        }, 50);
+
+        triggerConfetti();
+        startTypewriter();
+        createFloatingHearts();
+      }, 300);
+    }
+
+    function goToHome() {
+      playSound('pop');
+      const card1 = document.getElementById('card1');
+      const card2 = document.getElementById('card2');
+      const card3 = document.getElementById('card3');
+
+      card2.classList.add('d-none-custom');
+      card3.classList.add('d-none-custom');
+
+      card1.classList.remove('d-none-custom');
+      card1.style.opacity = '0';
+      card1.style.transform = 'scale(0.9)';
+
+      setTimeout(() => {
+        card1.style.opacity = '1';
+        card1.style.transform = 'scale(1)';
+      }, 50);
+    }
+
+    function triggerConfetti() {
+      if (typeof confetti === 'function') {
+        confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
+        setTimeout(() => {
+          confetti({ particleCount: 60, angle: 60, spread: 55, origin: { x: 0 } });
+          confetti({ particleCount: 60, angle: 120, spread: 55, origin: { x: 1 } });
+        }, 250);
+      }
+    }
+
+    function startTypewriter() {
+      const text = "Mujhe pata tha tum Haan hi bologi! Tumne meri duniya poori tarah se complete kar di hai ❤️";
+      let index = 0;
+      const elem = document.getElementById('typewriterText');
+      elem.innerHTML = "";
+
+      function type() {
+        if (index < text.length) {
+          elem.innerHTML += text.charAt(index);
+          index++;
+          setTimeout(type, 35);
+        }
+      }
+      type();
+    }
+
+    function createFloatingHearts() {
+      setInterval(() => {
+        const heart = document.createElement('div');
+        heart.className = 'floating-heart';
+        heart.innerText = ['❤️', '💖', '💝', '💕', '😍', '🌸'][Math.floor(Math.random() * 6)];
+        heart.style.left = Math.random() * 90 + 5 + 'vw';
+        heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 4000);
+      }, 300);
+    }
+
+    /* ================= 7. LOVE CERTIFICATE CANVAS GENERATOR & DOWNLOAD ================= */
+    function generateAndShowCertificate() {
+      const certCanvas = document.getElementById('certificateCanvas');
+      const c = certCanvas.getContext('2d');
+
+      // Background Fill
+      c.fillStyle = "#ffffff";
+      c.fillRect(0, 0, 500, 350);
+
+      // Decorative Double Border
+      c.strokeStyle = "#ff0055";
+      c.lineWidth = 6;
+      c.strokeRect(15, 15, 470, 320);
+
+      c.strokeStyle = "#ffb3c6";
+      c.lineWidth = 2;
+      c.strokeRect(23, 23, 454, 304);
+
+      // Certificate Text Content
+      c.fillStyle = "#666666";
+      c.font = "bold 12px Poppins, sans-serif";
+      c.textAlign = "center";
+      c.fillText("OFFICIAL CERTIFICATE OF LOVE", 250, 60);
+
+      c.fillStyle = "#ff0055";
+      c.font = "bold 32px 'Dancing Script', cursive";
+      c.fillText("Bond of Lifetime Together", 250, 110);
+
+      c.fillStyle = "#444444";
+      c.font = "13px Poppins, sans-serif";
+      c.fillText("This is to certify that both hearts are officially locked!", 250, 150);
+
+      c.fillStyle = "#e6005c";
+      c.font = "bold 16px Poppins, sans-serif";
+      c.fillText("Proposal Status: ACCEPTED FOREVER ❤️", 250, 190);
+
+      // Date Stamp
+      const today = new Date();
+      const dateStr = today.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      c.fillStyle = "#888888";
+      c.font = "11px Poppins, sans-serif";
+      c.fillText("Issued on: " + dateStr, 250, 230);
+
+      // Signatures (Changed to clean, readable Poppins simple font)
+      c.fillStyle = "#ff0055";
+      c.font = "bold 18px Poppins, sans-serif";
+      c.fillText("ANKUSH", 140, 280);
+      c.fillText("HIMANSHI", 360, 280);
+
+      c.strokeStyle = "#cccccc";
+      c.lineWidth = 1;
+      c.beginPath();
+      c.moveTo(80, 290); c.lineTo(200, 290);
+      c.moveTo(300, 290); c.lineTo(420, 290);
+      c.stroke();
+
+      c.fillStyle = "#888888";
+      c.font = "10px Poppins, sans-serif";
+      c.fillText("SIGNATURE 1", 140, 305);
+      c.fillText("SIGNATURE 2", 360, 305);
+
+      // Setup Download Link Data URL
+      const dataURL = certCanvas.toDataURL("image/png");
+      document.getElementById("downloadCertBtn").href = dataURL;
+
+      const modal = new bootstrap.Modal(document.getElementById('certificateModal'));
+      modal.show();
+    }
+
+    /* WhatsApp Share */
+    function whatsappShare() {
+      const text = encodeURIComponent("Usne Haan bol diya! ❤️ Meri life set ho gayi hai! 🥰✨");
+      window.open("https://wa.me/?text=" + text, "_blank");
+    }
+  </script>
+</body>
+</html>
